@@ -1,35 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smelly Charlie</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smelly Charlie Game</title>
 
-    body {
-      background: #000;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      overflow: hidden;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    h1 {
-      font-size: clamp(4rem, 12vw, 10rem);
-      font-weight: bold;
-      text-align: center;
-    }
-  </style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  text-align: center;
+}
+
+h1 {
+  font-size: 60px;
+  margin-top: 40px;
+}
+
+#score {
+  font-size: 30px;
+}
+
+#charlie {
+  position: absolute;
+  padding: 20px 30px;
+  background: white;
+  color: black;
+  border-radius: 15px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+#message {
+  font-size: 25px;
+  margin-top: 20px;
+}
+</style>
 </head>
+
 <body>
-  <h1>SMELLY CHARLIE</h1>
+
+<h1>SMELLY CHARLIE</h1>
+<div id="score">Score: 0</div>
+<div id="message">Catch Charlie!</div>
+
+<div id="charlie">💩 Charlie</div>
+
+<script>
+const charlie = document.getElementById("charlie");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
+
+let score = 0;
+
+function moveCharlie() {
+  let x = Math.random() * (window.innerWidth - 180);
+  let y = Math.random() * (window.innerHeight - 100);
+
+  charlie.style.left = x + "px";
+  charlie.style.top = y + "px";
+}
+
+charlie.onclick = function() {
+  score++;
+  scoreText.textContent = "Score: " + score;
+
+  if (score >= 10) {
+    message.textContent = "You caught Smelly Charlie! 🏆";
+  } else {
+    message.textContent = "Get him!";
+  }
+
+  moveCharlie();
+};
+
+moveCharlie();
+</script>
+
 </body>
 </html>
