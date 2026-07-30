@@ -1,47 +1,91 @@
-#intro {
-  position: fixed;
-  inset: 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smelly Charlie Game</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
   background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  animation: disappear 3s forwards;
-  animation-delay: 5s;
-}
-
-#intro h1 {
-  font-size: 90px;
   color: white;
-  animation: spin 2s, zoom 3s;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  text-align: center;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(720deg) scale(0);
-  }
-  to {
-    transform: rotate(0deg) scale(1);
-  }
+h1 {
+  font-size: 60px;
+  margin-top: 40px;
 }
 
-@keyframes zoom {
-  50% {
-    transform: scale(1.5);
-  }
+#score {
+  font-size: 30px;
 }
 
-@keyframes disappear {
-  0% {
-    opacity: 1;
-  }
-  99% {
-    opacity: 0;
-    visibility: hidden;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-    display: none;
-  }
+#charlie {
+  position: absolute;
+  padding: 20px 30px;
+  background: white;
+  color: black;
+  border-radius: 15px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
 }
+
+#message {
+  font-size: 25px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>SMELLY CHARLIE</h1>
+<div id="score">Score: 0</div>
+<div id="message">Catch Charlie!</div>
+
+<div id="charlie">💩 Charlie</div>
+
+<script>
+const charlie = document.getElementById("charlie");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
+
+let score = 0;
+
+function moveCharlie() {
+  let x = Math.random() * (window.innerWidth - 180);
+  let y = Math.random() * (window.innerHeight - 100);
+
+  charlie.style.left = x + "px";
+  charlie.style.top = y + "px";
+}
+
+charlie.onclick = function() {
+  score++;
+  scoreText.textContent = "Score: " + score;
+
+  if (score >= 10) {
+    message.textContent = "You caught Smelly Charlie! 🏆";
+  } else {
+    message.textContent = "Get him!";
+  }
+
+  moveCharlie();
+};
+
+moveCharlie();
+</script>
+
+</body>
+</html>
