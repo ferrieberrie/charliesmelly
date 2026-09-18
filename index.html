@@ -1,70 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950 text-white font-sans select-none overflow-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catch the Klipl</title>
+    <title>Catch the Klipl: 20,000x Brainrot Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neonLime: '#39FF14',
+                        neonPink: '#FF007F',
+                        neonCyan: '#00F0FF',
+                        neonPurple: '#A000FF',
+                        neonYellow: '#FFE600'
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 0.6s infinite',
+                        'bounce-subtle': 'bounce 1s infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 10px #39FF14, inset 0 0 5px #39FF14' },
+                            '100%': { boxShadow: '0 0 25px #39FF14, 0 0 40px #FF007F' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0f0f13;
-            --primary-font: 'Arial Black', Impact, sans-serif;
             --lime: #32cd32;
             --red: #ff0000;
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: var(--bg-color);
-            color: white;
-            font-family: var(--primary-font);
-            user-select: none; /* Prevent text highlighting during chaotic clicking */
-            touch-action: none; /* Prevent zooming on double tap on mobile */
+        /* Custom scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+        
+        /* Grid background pattern */
+        .bg-cyber-grid {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        #game-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            cursor: crosshair;
-        }
+        .neon-text-lime { text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; }
+        .neon-text-pink { text-shadow: 0 0 10px #FF007F, 0 0 20px #FF007F; }
 
-        #ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        /* Prevent text selection overlay */
+        * { -webkit-user-select: none; user-select: none; }
 
-        .score-box {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border: 4px solid var(--lime);
-            border-radius: 15px;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            box-shadow: 0 0 20px var(--lime);
-            text-shadow: 2px 2px 0 #000;
-            transition: all 0.2s;
-        }
-
+        /* Brainrot Animations & Game Elements */
         .klipl {
             position: absolute;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 900;
             cursor: pointer;
             transition: top 0.1s ease-out, left 0.1s ease-out;
             white-space: nowrap;
             z-index: 50;
-            padding: 20px; /* Bigger hit box */
+            padding: 20px;
             margin: -20px;
+            font-family: 'Impact', 'Arial Black', sans-serif;
         }
 
         .real-klipl {
@@ -79,7 +85,7 @@
 
         .particle {
             position: absolute;
-            font-size: 3rem;
+            font-size: 2.5rem;
             pointer-events: none;
             animation: floatUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             z-index: 100;
@@ -87,31 +93,32 @@
 
         .brainrot-text {
             position: absolute;
-            font-size: 4vw;
+            font-size: 2.5rem;
             color: hotpink;
             pointer-events: none;
             font-weight: 900;
             animation: popZoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             z-index: 101;
             text-transform: uppercase;
-            text-shadow: 3px 3px 0px #fff, -3px -3px 0px cyan, 0 0 20px hotpink;
+            text-shadow: 2px 2px 0px #fff, -2px -2px 0px cyan, 0 0 15px hotpink;
+            font-family: 'Impact', sans-serif;
         }
 
         .minus-aura-text {
-            color: var(--red);
+            color: var(--red) !important;
             text-shadow: 2px 2px 0px #fff, 0 0 10px #000;
         }
 
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0) scale(0.5); }
-            50% { transform: translateY(-50px) scale(1.5); }
-            100% { opacity: 0; transform: translateY(-150px) scale(2); }
+            50% { transform: translateY(-30px) scale(1.3); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.8); }
         }
 
         @keyframes popZoom {
             0% { opacity: 0; transform: scale(0.1) rotate(-20deg); }
-            40% { opacity: 1; transform: scale(1.5) rotate(15deg); }
-            100% { opacity: 0; transform: scale(2.5) rotate(0deg); }
+            40% { opacity: 1; transform: scale(1.3) rotate(15deg); }
+            100% { opacity: 0; transform: scale(2) rotate(0deg); }
         }
 
         .spin { animation: spin 0.4s linear infinite; }
@@ -122,27 +129,27 @@
 
         .shake { animation: shake 0.05s infinite; }
         @keyframes shake {
-            0% { transform: translate(15px, 15px) rotate(0deg) scale(1.1); }
-            20% { transform: translate(-15px, -15px) rotate(-5deg) scale(1.05); }
-            40% { transform: translate(-15px, 15px) rotate(5deg) scale(1.2); }
-            60% { transform: translate(15px, -15px) rotate(0deg) scale(1.1); }
-            80% { transform: translate(-15px, 0px) rotate(5deg) scale(1.05); }
-            100% { transform: translate(0px, 15px) rotate(-5deg) scale(1.2); }
+            0% { transform: translate(10px, 10px) rotate(0deg); }
+            20% { transform: translate(-10px, -10px) rotate(-3deg); }
+            40% { transform: translate(-10px, 10px) rotate(3deg); }
+            60% { transform: translate(10px, -10px) rotate(0deg); }
+            80% { transform: translate(-10px, 0px) rotate(3deg); }
+            100% { transform: translate(0px, 10px) rotate(-3deg); }
         }
 
         .flash { animation: flashBg 0.1s infinite; }
         @keyframes flashBg {
-            0% { background-color: #ff0000; }
-            20% { background-color: #00ff00; }
-            40% { background-color: #0000ff; }
-            60% { background-color: #ff00ff; }
-            80% { background-color: #ffff00; }
-            100% { background-color: #00ffff; }
+            0% { background-color: rgba(255, 0, 0, 0.4); }
+            20% { background-color: rgba(0, 255, 0, 0.4); }
+            40% { background-color: rgba(0, 0, 255, 0.4); }
+            60% { background-color: rgba(255, 0, 255, 0.4); }
+            80% { background-color: rgba(255, 255, 0, 0.4); }
+            100% { background-color: rgba(0, 255, 255, 0.4); }
         }
-        
+
         .bg-meme {
             position: absolute;
-            font-size: 3rem;
+            font-size: 2rem;
             opacity: 0.5;
             pointer-events: none;
             z-index: 5;
@@ -155,13 +162,13 @@
             0% { transform: translateX(0) translateY(0) rotate(-15deg) scale(0.5); opacity: 0; }
             10% { opacity: 0.8; }
             90% { opacity: 0.8; }
-            100% { transform: translateX(120vw) translateY(300px) rotate(30deg) scale(2.5); opacity: 0; }
+            100% { transform: translateX(1000px) translateY(200px) rotate(30deg) scale(2); opacity: 0; }
         }
 
         .explosion-particle {
             position: absolute;
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 150;
@@ -179,89 +186,161 @@
             color: white;
             border: 4px solid #ccc;
             border-top: 25px solid #ccc;
-            padding: 30px;
-            font-size: 2rem;
-            z-index: 5000;
+            padding: 20px;
+            font-size: 1.2rem;
+            z-index: 200;
             pointer-events: none;
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-family: 'Comic Sans MS', sans-serif;
             animation: popZoom 0.2s ease-out;
-            box-shadow: 15px 15px 0px rgba(0,0,0,0.8);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.8);
             text-align: center;
             text-transform: uppercase;
-        }
-
-        #start-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            text-align: center;
-        }
-
-        #start-screen h1 {
-            font-size: 5rem;
-            color: var(--lime);
-            text-shadow: 0 0 20px var(--lime);
-            margin: 0 0 20px 0;
-            animation: wobble 0.5s infinite alternate;
-        }
-
-        #start-screen p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            line-height: 1.5;
-            margin-bottom: 40px;
-            color: #ddd;
-        }
-
-        .btn {
-            font-family: var(--primary-font);
-            font-size: 3rem;
-            padding: 20px 40px;
-            background: var(--lime);
-            color: #000;
-            border: 6px solid #fff;
-            cursor: pointer;
-            font-weight: 900;
-            border-radius: 20px;
-            text-transform: uppercase;
-            box-shadow: 0 10px 0 #fff, 0 0 30px var(--lime);
-            transition: transform 0.1s;
-        }
-
-        .btn:active {
-            transform: translateY(10px);
-            box-shadow: 0 0px 0 #fff, 0 0 30px var(--lime);
         }
     </style>
 </head>
-<body>
+<body id="body-main" class="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden bg-cyber-grid">
 
-    <div id="game-container">
-        <div id="ui">
-            <div class="score-box" id="aura-score-box">AURA: <span id="aura">0</span> 🗿</div>
+    <!-- TOP HEADER / STATUS BAR -->
+    <header class="h-20 bg-slate-900/90 border-b border-slate-800 px-4 flex items-center justify-between z-30 backdrop-blur-md shrink-0">
+        <!-- Logo & Rank -->
+        <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-gradient-to-tr from-lime-500 via-emerald-400 to-cyan-500 rounded-xl flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg shadow-lime-500/20 animate-pulse-fast">
+                ⚡
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-lime-400 via-cyan-400 to-pink-500 bg-clip-text text-transparent italic uppercase">
+                    Catch the Klipl
+                </h1>
+                <div class="flex items-center space-x-2 text-xs">
+                    <span class="text-slate-400">RANK:</span>
+                    <span id="rank-title" class="font-bold text-neonLime">Level 1 NPC</span>
+                    <span class="text-slate-600">|</span>
+                    <div class="w-24 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
+                        <div id="rank-bar" class="bg-gradient-to-r from-lime-400 to-cyan-400 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div id="start-screen">
-        <h1>CATCH THE KLIPL</h1>
-        <p>
-            <strong>RULES:</strong><br>
-            Click the <span style="color: limegreen;">LIME GREEN Klipl</span> to gain AURA.<br>
-            Clicking the <span style="color: red;">RED Klipl</span> destroys your AURA.<br>
-            Missing clicks drains AURA.<br>
-            <em>WARNING: Contains flashing lights, loud noises, and terminal brainrot.</em>
-        </p>
-        <button class="btn" onclick="startGame()">LET HIM COOK</button>
-    </div>
+        <!-- Live Score Counter -->
+        <div class="flex items-center space-x-8">
+            <div class="text-center">
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Total Aura</div>
+                <div id="aura" class="text-3xl font-black text-neonLime tracking-wide font-mono neon-text-lime">
+                    0
+                </div>
+            </div>
+            <div class="text-center hidden sm:block">
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Diff Scale</div>
+                <div id="diff-display" class="text-xl font-bold text-cyan-400 font-mono">
+                    1.0x
+                </div>
+            </div>
+            <div class="text-center hidden md:block">
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Speed Rate</div>
+                <div id="speed-display" class="text-xl font-bold text-pink-400 font-mono">
+                    800ms
+                </div>
+            </div>
+        </div>
 
+        <!-- Controls / Audio Settings -->
+        <div class="flex items-center space-x-3">
+            <button id="btn-mute" onclick="toggleMute()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition active:scale-95" title="Toggle Mute">
+                <i id="mute-icon" class="fa-solid fa-volume-high text-lg text-lime-400"></i>
+            </button>
+            <div class="hidden lg:flex flex-col text-right">
+                <span class="text-xs text-slate-400 font-mono">BRAINROT v20,000x</span>
+                <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">● MAX CHAOS ONLINE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN 3-COLUMN LAYOUT CONTENT AREA -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 overflow-hidden">
+
+        <!-- ================= LEFT COLUMN: DISTRACTION FEED (3 cols) ================= -->
+        <section class="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
+            <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm shadow-xl">
+                <!-- Header -->
+                <div class="p-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-200">SLOP DISTRACTION FEED</h2>
+                    </div>
+                    <span class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                        LIVE 420.6K
+                    </span>
+                </div>
+
+                <!-- 2D Subway Surfers Mini-Game Canvas -->
+                <div class="p-2 bg-slate-950 flex flex-col items-center border-b border-slate-800">
+                    <div class="w-full flex justify-between items-center mb-1 text-[11px] text-slate-400 font-mono">
+                        <span class="text-yellow-400 font-bold">🏃 SUBWAY RUNNER</span>
+                        <span id="subway-score">SCORE: 0</span>
+                    </div>
+                    <div class="relative w-full h-44 rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
+                        <canvas id="subway-canvas" class="w-full h-full block"></canvas>
+                        <div class="absolute bottom-2 left-2 right-2 flex justify-between text-[10px] bg-slate-950/70 backdrop-blur px-2 py-1 rounded text-slate-300 font-mono">
+                            <span>A/D (Switch) | W (Jump)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Stream Chat Feed -->
+                <div class="flex-1 flex flex-col overflow-hidden bg-slate-950/50 p-2">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                        <span>💬 Live Brainrot Chat</span>
+                        <span class="text-emerald-400">SLOP STREAM</span>
+                    </div>
+                    <div id="stream-chat" class="flex-1 overflow-y-auto space-y-2 pr-1 font-sans text-xs">
+                        <!-- Dynamic chat messages injected here -->
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex gap-2">
+                        <input id="chat-input" type="text" placeholder="Send brainrot chat..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
+                        <button onclick="sendUserChatMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CENTER COLUMN: MAIN ARCADE ARENA (9 cols) ================= -->
+        <section class="lg:col-span-9 flex flex-col h-full overflow-hidden relative">
+            <div id="game-container" class="relative flex-1 bg-slate-900/60 border-2 border-slate-800 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col items-center justify-center cursor-crosshair">
+                
+                <!-- Instructions Top Pill -->
+                <div class="absolute top-4 z-20 bg-slate-900/80 border border-slate-700 px-4 py-1.5 rounded-full text-xs font-bold text-slate-300 shadow-lg backdrop-blur flex items-center space-x-2 pointer-events-none">
+                    <span class="animate-ping inline-flex h-2 w-2 rounded-full bg-lime-400"></span>
+                    <span>CLICK LIME KLIPL FOR AURA. AVOID RED KLIPLS AND MISSED CLICKS!</span>
+                </div>
+
+                <!-- START SCREEN OVERLAY -->
+                <div id="start-screen" class="absolute inset-0 bg-slate-950/95 z-50 flex flex-col items-center justify-center p-6 text-center">
+                    <h1 class="text-5xl font-black text-lime-400 drop-shadow-[0_0_20px_rgba(50,205,50,0.8)] mb-4 animate-bounce">
+                        CATCH THE KLIPL
+                    </h1>
+                    <p class="text-sm md:text-base max-w-md text-slate-300 mb-8 leading-relaxed">
+                        Click the <span class="text-lime-400 font-bold">LIME GREEN Klipl</span> to gain AURA.<br>
+                        Clicking <span class="text-red-500 font-bold">RED Klipls</span> destroys your AURA.<br>
+                        Missing clicks drains AURA.<br>
+                        <em class="text-xs text-slate-500 block mt-2">WARNING: Contains terminal levels of brainrot, audio effects, and screen chaos.</em>
+                    </p>
+                    <button class="px-8 py-4 bg-lime-400 text-slate-950 border-4 border-white font-black text-2xl rounded-2xl uppercase tracking-wider shadow-[0_10px_0_#fff,0_0_30px_#32cd32] active:translate-y-2 active:shadow-[0_0px_0_#fff,0_0_30px_#32cd32] transition-all" onclick="startGame()">
+                        LET HIM COOK 🗿
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- GAME ENGINE & BRAINROT INTERACTIVE SCRIPT -->
     <script>
         const phrases = [
             'Skibidi', 'Rizz', 'Gyatt', 'What the sigma', 
@@ -287,48 +366,46 @@
         let aura = 0;
         let gameActive = false;
         let targets = [];
-        let speed = 800; // Starting movement interval
+        let speed = 800; 
         let moveInterval;
         let bgInterval;
         let popupInterval;
         let diffScale = 1;
+        let isMuted = false;
 
         const container = document.getElementById('game-container');
         const auraDisplay = document.getElementById('aura');
-        const auraBox = document.getElementById('aura-score-box');
         const startScreen = document.getElementById('start-screen');
-        const body = document.body;
+        const bodyMain = document.getElementById('body-main');
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('mute-icon');
+            if(isMuted) {
+                icon.className = "fa-solid fa-volume-xmark text-lg text-red-500";
+            } else {
+                icon.className = "fa-solid fa-volume-high text-lg text-lime-400";
+            }
+        }
 
         function speak(text) {
+            if (isMuted) return;
             if ('speechSynthesis' in window) {
-                // Cancel current speech to make it more chaotic/interrupting
                 window.speechSynthesis.cancel(); 
-                
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.pitch = 0.5 + Math.random() * 1.5; // Random pitch 0.5 to 2
-                utterance.rate = 1.2 + Math.random(); // Fast rate 1.2 to 2.2
-                utterance.volume = 1;
+                utterance.pitch = 0.5 + Math.random() * 1.5; 
+                utterance.rate = 1.2 + Math.random(); 
+                utterance.volume = 0.8;
                 window.speechSynthesis.speak(utterance);
             }
         }
 
         container.addEventListener('mousedown', (e) => {
             if(!gameActive) return;
-            // If they clicked the container itself (missed targets)
             if(e.target === container) {
                 updateAura(-5);
                 spawnParticle(e.clientX, e.clientY, '-5 AURA', 'brainrot-text minus-aura-text');
                 if(Math.random() > 0.7) speak("Missed");
-                shortShake();
-            }
-        });
-
-        // Touch support
-        container.addEventListener('touchstart', (e) => {
-            if(!gameActive) return;
-            if(e.target === container) {
-                updateAura(-5);
-                spawnParticle(e.touches[0].clientX, e.touches[0].clientY, '-5 AURA', 'brainrot-text minus-aura-text');
                 shortShake();
             }
         });
@@ -338,7 +415,6 @@
             el.className = `klipl ${isReal ? 'real-klipl' : 'fake-klipl'}`;
             el.innerText = 'Klipl';
             
-            // Initial positioning
             moveEl(el);
 
             const hitLogic = (x, y) => {
@@ -347,41 +423,31 @@
                     hitEffects(x, y);
                     moveEl(el);
                     
-                    // Ramp up difficulty
                     speed = Math.max(150, speed - 15);
                     diffScale = Math.floor(aura / 50) + 1;
+                    document.getElementById('diff-display').innerText = diffScale + 'x';
+                    document.getElementById('speed-display').innerText = speed + 'ms';
                     resetInterval();
 
-                    // Occasionally spawn more real or fake ones at high scores
-                    if (aura > 0 && aura % 100 === 0 && targets.length < 20) {
+                    if (aura > 0 && aura % 100 === 0 && targets.length < 15) {
                         createKlipl(true);
                         createKlipl(false);
-                        createKlipl(false); // extra fakes
+                        createKlipl(false);
                     }
                 } else {
                     updateAura(-50);
                     const phrase = negativePhrases[Math.floor(Math.random() * negativePhrases.length)];
                     speak(phrase);
                     spawnParticle(x, y, phrase, 'brainrot-text minus-aura-text');
-                    
                     createExplosion(x, y, 'var(--red)');
-                    
                     severeShake();
                     moveEl(el);
                 }
             };
 
-            // Mouse event
             el.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
                 hitLogic(e.clientX, e.clientY);
-            });
-
-            // Touch event
-            el.addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-                e.preventDefault(); // prevent mouse emulation
-                hitLogic(e.touches[0].clientX, e.touches[0].clientY);
             });
 
             container.appendChild(el);
@@ -390,14 +456,13 @@
         }
 
         function moveEl(el) {
-            // Subtract size to keep in bounds
-            const maxX = window.innerWidth - 150; 
-            const maxY = window.innerHeight - 100;
+            const rect = container.getBoundingClientRect();
+            const maxX = rect.width - 120; 
+            const maxY = rect.height - 80;
             
             el.style.left = Math.max(10, Math.random() * maxX) + 'px';
             el.style.top = Math.max(10, Math.random() * maxY) + 'px';
 
-            // Random chaos animations
             el.classList.remove('spin', 'wobble');
             const rand = Math.random();
             if(rand > 0.66) el.classList.add('spin');
@@ -409,12 +474,9 @@
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             speak(phrase);
             
-            // Main text pop
             spawnParticle(x, y, phrase, 'brainrot-text');
-            
             createExplosion(x, y, 'var(--lime)');
             
-            // Emoji explosion
             const numEmojis = 3 + Math.floor(Math.random() * 4);
             for(let i = 0; i < numEmojis; i++) {
                 setTimeout(() => {
@@ -430,31 +492,35 @@
             const p = document.createElement('div');
             p.className = className;
             p.innerText = text;
-            p.style.left = x + 'px';
-            p.style.top = y + 'px';
             
-            // Random colors for brainrot text
+            const rect = container.getBoundingClientRect();
+            p.style.left = (x - rect.left) + 'px';
+            p.style.top = (y - rect.top) + 'px';
+            
             if(className.includes('brainrot-text') && !className.includes('minus-aura')) {
                 const colors = ['hotpink', 'cyan', 'yellow', 'lime', 'orange'];
                 p.style.color = colors[Math.floor(Math.random() * colors.length)];
             }
 
             container.appendChild(p);
-            // Cleanup DOM
             setTimeout(() => { if(p.parentNode) p.remove(); }, 1000);
         }
 
         function createExplosion(x, y, color) {
-            for (let i = 0; i < 25; i++) {
+            const rect = container.getBoundingClientRect();
+            const localX = x - rect.left;
+            const localY = y - rect.top;
+
+            for (let i = 0; i < 20; i++) {
                 const p = document.createElement('div');
                 p.className = 'explosion-particle';
                 p.style.backgroundColor = color;
-                p.style.boxShadow = `0 0 15px ${color}`;
-                p.style.left = x + 'px';
-                p.style.top = y + 'px';
+                p.style.boxShadow = `0 0 10px ${color}`;
+                p.style.left = localX + 'px';
+                p.style.top = localY + 'px';
                 
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = 80 + Math.random() * 200;
+                const velocity = 60 + Math.random() * 150;
                 const tx = Math.cos(angle) * velocity;
                 const ty = Math.sin(angle) * velocity;
                 
@@ -471,27 +537,28 @@
             const p = document.createElement('div');
             p.className = 'bg-meme';
             p.innerText = phrases[Math.floor(Math.random() * phrases.length)] + ' ' + emojis[Math.floor(Math.random() * emojis.length)];
-            p.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            p.style.left = -200 + 'px';
-            p.style.fontSize = (3 + Math.random() * 5) + 'rem';
+            
+            const rect = container.getBoundingClientRect();
+            p.style.top = Math.random() * (rect.height - 50) + 'px';
+            p.style.left = '-150px';
+            p.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
             
             const colors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff0000'];
             p.style.color = colors[Math.floor(Math.random() * colors.length)];
-            p.style.textShadow = `2px 2px 0 #000, 0 0 20px ${p.style.color}`;
             
             container.appendChild(p);
             setTimeout(() => { if(p.parentNode) p.remove(); }, 4000);
         }
 
         function spawnPopup() {
-            if (!gameActive || aura < 30) return; // Only start popups when things get real
+            if (!gameActive || aura < 30) return;
             const p = document.createElement('div');
             p.className = 'chaotic-popup';
             p.innerText = popupMessages[Math.floor(Math.random() * popupMessages.length)];
             
-            // Random position but mostly centered
-            p.style.left = (10 + Math.random() * 50) + 'vw';
-            p.style.top = (10 + Math.random() * 50) + 'vh';
+            const rect = container.getBoundingClientRect();
+            p.style.left = Math.random() * (rect.width - 250) + 'px';
+            p.style.top = Math.random() * (rect.height - 150) + 'px';
             
             container.appendChild(p);
             if(Math.random() > 0.6) speak("Error");
@@ -499,29 +566,40 @@
         }
 
         function shortShake() {
-            body.classList.add('shake');
-            setTimeout(() => body.classList.remove('shake'), 50);
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 50);
         }
 
         function severeShake() {
-            body.classList.add('shake');
-            setTimeout(() => body.classList.remove('shake'), 200);
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 200);
         }
 
         function updateAura(amount) {
             aura += amount;
-            // Floor aura at 0 or allow negatives? Let's allow negative for max embarrassment
             auraDisplay.innerText = aura;
             
-            // Pulse UI
-            auraBox.style.transform = 'scale(1.2)';
-            setTimeout(() => auraBox.style.transform = 'scale(1)', 100);
-
-            // The Flashing Background feature (activate if Aura > 50)
-            if(aura > 50) {
-                body.classList.add('flash');
+            const rankTitle = document.getElementById('rank-title');
+            const rankBar = document.getElementById('rank-bar');
+            
+            if(aura < 50) {
+                rankTitle.innerText = "Level 1 NPC";
+                rankBar.style.width = Math.max(0, (aura / 50) * 100) + "%";
+            } else if(aura < 200) {
+                rankTitle.innerText = "Sigma Initiate";
+                rankBar.style.width = (((aura - 50) / 150) * 100) + "%";
+            } else if(aura < 500) {
+                rankTitle.innerText = "Rizz God";
+                rankBar.style.width = (((aura - 200) / 300) * 100) + "%";
             } else {
-                body.classList.remove('flash');
+                rankTitle.innerText = "GigaChad Overlord";
+                rankBar.style.width = "100%";
+            }
+
+            if(aura > 50) {
+                bodyMain.classList.add('flash');
+            } else {
+                bodyMain.classList.remove('flash');
             }
         }
 
@@ -535,7 +613,6 @@
         function startGame() {
             startScreen.style.display = 'none';
             
-            // Initialize TTS with a dummy utterance to bypass browser autoplay restrictions
             if ('speechSynthesis' in window) {
                 const initUtterance = new SpeechSynthesisUtterance('');
                 initUtterance.volume = 0;
@@ -544,25 +621,151 @@
 
             gameActive = true;
             aura = 0;
-            speed = 800; // Reset to somewhat slow
+            speed = 800;
             diffScale = 1;
             updateAura(0);
             
             targets.forEach(t => t.remove());
             targets = [];
-            document.querySelectorAll('.particle, .brainrot-text, .bg-meme, .chaotic-popup, .explosion-particle').forEach(e => e.remove());
             
             clearInterval(bgInterval);
             clearInterval(popupInterval);
-            bgInterval = setInterval(spawnBgMeme, 350); // Very fast meme stream
-            popupInterval = setInterval(spawnPopup, 2500); // Constant annoying popups
+            bgInterval = setInterval(spawnBgMeme, 500); 
+            popupInterval = setInterval(spawnPopup, 2500); 
             
-            // Spawn initial
             createKlipl(true);
             createKlipl(false);
 
             resetInterval();
             speak("Chat, is this real?");
+        }
+
+        /* ---------------- SUBWAY RUNNER MINI-GAME ---------------- */
+        const subwayCanvas = document.getElementById('subway-canvas');
+        const subwayCtx = subwayCanvas.getContext('2d');
+        let subwayScore = 0;
+        let subwayLane = 1; // 0: left, 1: center, 2: right
+        let subwayY = 0;
+        let isJumping = false;
+        let jumpTimer = 0;
+        let obstacles = [];
+
+        function resizeSubwayCanvas() {
+            if(!subwayCanvas.parentElement) return;
+            subwayCanvas.width = subwayCanvas.parentElement.clientWidth;
+            subwayCanvas.height = subwayCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeSubwayCanvas);
+        resizeSubwayCanvas();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
+                if (subwayLane > 0) subwayLane--;
+            } else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
+                if (subwayLane < 2) subwayLane++;
+            } else if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
+                if (!isJumping) {
+                    isJumping = true;
+                    jumpTimer = 0;
+                }
+            }
+        });
+
+        function updateSubway() {
+            subwayCtx.fillStyle = '#0f172a';
+            subwayCtx.fillRect(0, 0, subwayCanvas.width, subwayCanvas.height);
+
+            const laneWidth = subwayCanvas.width / 3;
+
+            // Draw lanes
+            subwayCtx.strokeStyle = '#334155';
+            subwayCtx.setLineDash([10, 10]);
+            subwayCtx.beginPath();
+            subwayCtx.moveTo(laneWidth, 0); subwayCtx.lineTo(laneWidth, subwayCanvas.height);
+            subwayCtx.moveTo(laneWidth * 2, 0); subwayCtx.lineTo(laneWidth * 2, subwayCanvas.height);
+            subwayCtx.stroke();
+            subwayCtx.setLineDash([]);
+
+            // Spawn obstacles
+            if (Math.random() < 0.03) {
+                obstacles.push({
+                    lane: Math.floor(Math.random() * 3),
+                    y: -30,
+                    speed: 3 + Math.random() * 2
+                });
+            }
+
+            // Update jump
+            let playerOffset = 0;
+            if (isJumping) {
+                jumpTimer += 0.1;
+                playerOffset = Math.sin(jumpTimer * Math.PI) * 25;
+                if (jumpTimer >= 1) {
+                    isJumping = false;
+                }
+            }
+
+            // Draw player
+            const playerX = subwayLane * laneWidth + laneWidth / 2;
+            const playerY = subwayCanvas.height - 30 - playerOffset;
+            subwayCtx.fillStyle = '#39FF14';
+            subwayCtx.beginPath();
+            subwayCtx.arc(playerX, playerY, 10, 0, Math.PI * 2);
+            subwayCtx.fill();
+
+            // Obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.y += obs.speed;
+
+                const obsX = obs.lane * laneWidth + laneWidth / 2;
+                subwayCtx.fillStyle = '#ef4444';
+                subwayCtx.fillRect(obsX - 12, obs.y - 10, 24, 20);
+
+                // Collision
+                if (obs.lane === subwayLane && Math.abs(obs.y - playerY) < 15 && playerOffset < 10) {
+                    subwayScore = Math.max(0, subwayScore - 50);
+                    obstacles.splice(i, 1);
+                    continue;
+                }
+
+                if (obs.y > subwayCanvas.height) {
+                    subwayScore += 10;
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            document.getElementById('subway-score').innerText = `SCORE: ${subwayScore}`;
+            requestAnimationFrame(updateSubway);
+        }
+        requestAnimationFrame(updateSubway);
+
+        /* ---------------- DYNAMIC CHAT FEED ---------------- */
+        const chatFeed = document.getElementById('stream-chat');
+        const chatUsers = ['KaiCenatFan', 'OhioGyatt', 'SigmaGrind', 'Skibidi123', 'MewingKing', 'FanumTaxer'];
+        const chatTexts = ['W RIZZ', 'FELL OFF', 'WHAT THE SIGMA', 'ONLY IN OHIO 💀💀', 'LET HIM COOK', 'NEGATIVE AURA', 'BRO IS COOKED'];
+
+        function addChatMessage(user, text) {
+            const msg = document.createElement('div');
+            msg.className = 'bg-slate-900/80 p-1.5 rounded border border-slate-800 text-[11px] leading-tight';
+            msg.innerHTML = `<span class="font-bold text-cyan-400">${user}:</span> <span class="text-slate-200">${text}</span>`;
+            chatFeed.appendChild(msg);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+            if(chatFeed.children.length > 30) chatFeed.children[0].remove();
+        }
+
+        setInterval(() => {
+            const u = chatUsers[Math.floor(Math.random() * chatUsers.length)];
+            const t = chatTexts[Math.floor(Math.random() * chatTexts.length)];
+            addChatMessage(u, t);
+        }, 1500);
+
+        function sendUserChatMessage() {
+            const input = document.getElementById('chat-input');
+            if(input.value.trim() !== '') {
+                addChatMessage('You', input.value.trim());
+                input.value = '';
+            }
         }
     </script>
 </body>
