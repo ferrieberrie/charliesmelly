@@ -222,7 +222,7 @@
             </div>
         </div>
 
-        <!-- Live Score Counter -->
+        <!-- Live Score & Passive Aura Counter -->
         <div class="flex items-center space-x-8">
             <div class="text-center">
                 <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Total Aura</div>
@@ -231,15 +231,15 @@
                 </div>
             </div>
             <div class="text-center hidden sm:block">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Diff Scale</div>
-                <div id="diff-display" class="text-xl font-bold text-cyan-400 font-mono">
-                    1.0x
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">AFK Yield</div>
+                <div id="afk-rate-display" class="text-xl font-bold text-yellow-400 font-mono">
+                    +0/s
                 </div>
             </div>
             <div class="text-center hidden md:block">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Speed Rate</div>
-                <div id="speed-display" class="text-xl font-bold text-pink-400 font-mono">
-                    800ms
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Diff Scale</div>
+                <div id="diff-display" class="text-xl font-bold text-cyan-400 font-mono">
+                    1.0x
                 </div>
             </div>
         </div>
@@ -259,20 +259,20 @@
     <!-- MAIN 3-COLUMN LAYOUT CONTENT AREA -->
     <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 overflow-hidden">
 
-        <!-- ================= LEFT COLUMN: DISTRACTION FEED (3 cols) ================= -->
+        <!-- ================= LEFT COLUMN: DISTRACTION FEED & GLOBAL CHAT (3 cols) ================= -->
         <section class="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
             <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm shadow-xl">
                 <!-- Header -->
                 <div class="p-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <span class="relative flex h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                         </span>
-                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-200">SLOP DISTRACTION FEED</h2>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-200">GLOBAL MULTI-USER CHAT</h2>
                     </div>
-                    <span class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
-                        LIVE 420.6K
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                        ONLINE
                     </span>
                 </div>
 
@@ -282,25 +282,25 @@
                         <span class="text-yellow-400 font-bold">🏃 SUBWAY RUNNER</span>
                         <span id="subway-score">SCORE: 0</span>
                     </div>
-                    <div class="relative w-full h-44 rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
+                    <div class="relative w-full h-36 rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
                         <canvas id="subway-canvas" class="w-full h-full block"></canvas>
-                        <div class="absolute bottom-2 left-2 right-2 flex justify-between text-[10px] bg-slate-950/70 backdrop-blur px-2 py-1 rounded text-slate-300 font-mono">
+                        <div class="absolute bottom-1 left-1 right-1 flex justify-between text-[9px] bg-slate-950/80 backdrop-blur px-2 py-0.5 rounded text-slate-300 font-mono">
                             <span>A/D (Switch) | W (Jump)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Live Stream Chat Feed -->
+                <!-- Real Live Global Multi-User Chat Feed -->
                 <div class="flex-1 flex flex-col overflow-hidden bg-slate-950/50 p-2">
                     <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
-                        <span>💬 Live Brainrot Chat</span>
-                        <span class="text-emerald-400">SLOP STREAM</span>
+                        <span>💬 Live Global Chat</span>
+                        <span class="text-cyan-400">BROADCAST NETWORK</span>
                     </div>
                     <div id="stream-chat" class="flex-1 overflow-y-auto space-y-2 pr-1 font-sans text-xs">
                         <!-- Dynamic chat messages injected here -->
                     </div>
                     <div class="mt-2 pt-2 border-t border-slate-800/80 flex gap-2">
-                        <input id="chat-input" type="text" placeholder="Send brainrot chat..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-400">
+                        <input id="chat-input" type="text" placeholder="Send global chat..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-400" onkeydown="if(event.key==='Enter') sendUserChatMessage()">
                         <button onclick="sendUserChatMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
                             Send
                         </button>
@@ -309,8 +309,8 @@
             </div>
         </section>
 
-        <!-- ================= CENTER COLUMN: MAIN ARCADE ARENA (9 cols) ================= -->
-        <section class="lg:col-span-9 flex flex-col h-full overflow-hidden relative">
+        <!-- ================= CENTER COLUMN: MAIN ARCADE ARENA (6 cols) ================= -->
+        <section class="lg:col-span-6 flex flex-col h-full overflow-hidden relative">
             <div id="game-container" class="relative flex-1 bg-slate-900/60 border-2 border-slate-800 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col items-center justify-center cursor-crosshair">
                 
                 <!-- Instructions Top Pill -->
@@ -327,7 +327,7 @@
                     <p class="text-sm md:text-base max-w-md text-slate-300 mb-8 leading-relaxed">
                         Click the <span class="text-lime-400 font-bold">LIME GREEN Klipl</span> to gain AURA.<br>
                         Clicking <span class="text-red-500 font-bold">RED Klipls</span> destroys your AURA.<br>
-                        Missing clicks drains AURA.<br>
+                        Buy <span class="text-yellow-400 font-bold">AFK Aura Farmers</span> to generate passive income.<br>
                         <em class="text-xs text-slate-500 block mt-2">WARNING: Contains terminal levels of brainrot, audio effects, and screen chaos.</em>
                     </p>
                     <button class="px-8 py-4 bg-lime-400 text-slate-950 border-4 border-white font-black text-2xl rounded-2xl uppercase tracking-wider shadow-[0_10px_0_#fff,0_0_30px_#32cd32] active:translate-y-2 active:shadow-[0_0px_0_#fff,0_0_30px_#32cd32] transition-all" onclick="startGame()">
@@ -335,6 +335,26 @@
                     </button>
                 </div>
 
+            </div>
+        </section>
+
+        <!-- ================= RIGHT COLUMN: AFK AURA FARMER SHOP (3 cols) ================= -->
+        <section class="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
+            <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm shadow-xl p-3">
+                <div class="p-2 bg-slate-950/80 border border-slate-800 rounded-xl mb-3 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl">🏪</span>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-yellow-400">AFK AURA FARMER SHOP</h2>
+                    </div>
+                    <span class="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                        PASSIVE YIELD
+                    </span>
+                </div>
+
+                <!-- Scrollable Upgrades Container -->
+                <div id="shop-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                    <!-- Upgrades dynamically generated in JavaScript -->
+                </div>
             </div>
         </section>
 
@@ -364,12 +384,14 @@
         ];
         
         let aura = 0;
+        let afkAuraRate = 0;
         let gameActive = false;
         let targets = [];
         let speed = 800; 
         let moveInterval;
         let bgInterval;
         let popupInterval;
+        let afkFarmerInterval;
         let diffScale = 1;
         let isMuted = false;
 
@@ -377,6 +399,56 @@
         const auraDisplay = document.getElementById('aura');
         const startScreen = document.getElementById('start-screen');
         const bodyMain = document.getElementById('body-main');
+
+        /* ---------------- AFK AURA FARMERS SHOP DATA ---------------- */
+        const shopUpgrades = [
+            { id: 'auto_clicker', name: 'Auto Skibidi Clicker', cost: 50, rate: 1, count: 0, icon: '🤖' },
+            { id: 'baby_gronk', name: 'Baby Gronk Rizzler', cost: 200, rate: 5, count: 0, icon: '👶' },
+            { id: 'fanum_taxer', name: 'Fanum Tax Collector', cost: 750, rate: 20, count: 0, icon: '🍕' },
+            { id: 'kai_cenat', name: 'Kai Cenat Stream Rig', cost: 2500, rate: 75, count: 0, icon: '🎥' },
+            { id: 'ohio_portal', name: 'Ohio Aura Portal', cost: 10000, rate: 300, count: 0, icon: '🌀' },
+            { id: 'gigachad_farm', name: 'GigaChad Mindset Farm', cost: 50000, rate: 1500, count: 0, icon: '🗿' }
+        ];
+
+        function renderShop() {
+            const container = document.getElementById('shop-items');
+            container.innerHTML = '';
+            shopUpgrades.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border ${aura >= item.cost ? 'bg-slate-900 border-yellow-500/50 hover:border-yellow-400' : 'bg-slate-950/60 border-slate-800 opacity-60'} transition flex items-center justify-between`;
+                card.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="text-2xl">${item.icon}</div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-100">${item.name}</div>
+                            <div class="text-[10px] text-yellow-400 font-mono">+${item.rate} Aura/sec</div>
+                            <div class="text-[10px] text-slate-400">Owned: <span class="text-white font-bold">${item.count}</span></div>
+                        </div>
+                    </div>
+                    <button onclick="buyFarmer(${index})" class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase ${aura >= item.cost ? 'bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-md shadow-yellow-500/20' : 'bg-slate-800 text-slate-500 cursor-not-allowed'} transition">
+                        ${item.cost}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function buyFarmer(index) {
+            const item = shopUpgrades[index];
+            if (aura >= item.cost) {
+                aura -= item.cost;
+                item.count++;
+                item.cost = Math.floor(item.cost * 1.3);
+                recalculateAFKRate();
+                updateAura(0);
+                speak("Purchased");
+            }
+        }
+
+        function recalculateAFKRate() {
+            afkAuraRate = shopUpgrades.reduce((total, item) => total + (item.count * item.rate), 0);
+            document.getElementById('afk-rate-display').innerText = `+${afkAuraRate}/s`;
+        }
 
         function toggleMute() {
             isMuted = !isMuted;
@@ -601,6 +673,8 @@
             } else {
                 bodyMain.classList.remove('flash');
             }
+
+            renderShop();
         }
 
         function resetInterval() {
@@ -630,9 +704,18 @@
             
             clearInterval(bgInterval);
             clearInterval(popupInterval);
+            clearInterval(afkFarmerInterval);
+
             bgInterval = setInterval(spawnBgMeme, 500); 
             popupInterval = setInterval(spawnPopup, 2500); 
             
+            // Passive AFK Aura Generation Timer
+            afkFarmerInterval = setInterval(() => {
+                if (afkAuraRate > 0) {
+                    updateAura(afkAuraRate);
+                }
+            }, 1000);
+
             createKlipl(true);
             createKlipl(false);
 
@@ -645,7 +728,6 @@
         const subwayCtx = subwayCanvas.getContext('2d');
         let subwayScore = 0;
         let subwayLane = 1; // 0: left, 1: center, 2: right
-        let subwayY = 0;
         let isJumping = false;
         let jumpTimer = 0;
         let obstacles = [];
@@ -707,10 +789,10 @@
 
             // Draw player
             const playerX = subwayLane * laneWidth + laneWidth / 2;
-            const playerY = subwayCanvas.height - 30 - playerOffset;
+            const playerY = subwayCanvas.height - 25 - playerOffset;
             subwayCtx.fillStyle = '#39FF14';
             subwayCtx.beginPath();
-            subwayCtx.arc(playerX, playerY, 10, 0, Math.PI * 2);
+            subwayCtx.arc(playerX, playerY, 8, 0, Math.PI * 2);
             subwayCtx.fill();
 
             // Obstacles
@@ -720,7 +802,7 @@
 
                 const obsX = obs.lane * laneWidth + laneWidth / 2;
                 subwayCtx.fillStyle = '#ef4444';
-                subwayCtx.fillRect(obsX - 12, obs.y - 10, 24, 20);
+                subwayCtx.fillRect(obsX - 10, obs.y - 10, 20, 20);
 
                 // Collision
                 if (obs.lane === subwayLane && Math.abs(obs.y - playerY) < 15 && playerOffset < 10) {
@@ -740,33 +822,54 @@
         }
         requestAnimationFrame(updateSubway);
 
-        /* ---------------- DYNAMIC CHAT FEED ---------------- */
+        /* ---------------- GLOBAL MULTI-USER CHAT ENGINE ---------------- */
         const chatFeed = document.getElementById('stream-chat');
-        const chatUsers = ['KaiCenatFan', 'OhioGyatt', 'SigmaGrind', 'Skibidi123', 'MewingKing', 'FanumTaxer'];
-        const chatTexts = ['W RIZZ', 'FELL OFF', 'WHAT THE SIGMA', 'ONLY IN OHIO 💀💀', 'LET HIM COOK', 'NEGATIVE AURA', 'BRO IS COOKED'];
+        const myUserId = 'Rizzler_' + Math.floor(1000 + Math.random() * 9000);
+        
+        // BroadcastChannel syncs cross-tab/cross-window in real-time
+        const globalBroadcast = new BroadcastChannel('brainrot_global_chat_channel');
 
-        function addChatMessage(user, text) {
+        function addChatMessage(user, text, isGlobal = false) {
             const msg = document.createElement('div');
-            msg.className = 'bg-slate-900/80 p-1.5 rounded border border-slate-800 text-[11px] leading-tight';
-            msg.innerHTML = `<span class="font-bold text-cyan-400">${user}:</span> <span class="text-slate-200">${text}</span>`;
+            msg.className = `p-1.5 rounded border text-[11px] leading-tight ${isGlobal ? 'bg-cyan-950/60 border-cyan-800/80' : 'bg-slate-900/80 border-slate-800'}`;
+            msg.innerHTML = `<span class="font-bold ${user === myUserId ? 'text-lime-400' : 'text-cyan-400'}">${user}:</span> <span class="text-slate-200">${text}</span>`;
             chatFeed.appendChild(msg);
             chatFeed.scrollTop = chatFeed.scrollHeight;
-            if(chatFeed.children.length > 30) chatFeed.children[0].remove();
+            if(chatFeed.children.length > 40) chatFeed.children[0].remove();
         }
 
-        setInterval(() => {
-            const u = chatUsers[Math.floor(Math.random() * chatUsers.length)];
-            const t = chatTexts[Math.floor(Math.random() * chatTexts.length)];
-            addChatMessage(u, t);
-        }, 1500);
-
+        // Send local chat to Broadcast Channel
         function sendUserChatMessage() {
             const input = document.getElementById('chat-input');
-            if(input.value.trim() !== '') {
-                addChatMessage('You', input.value.trim());
+            const text = input.value.trim();
+            if(text !== '') {
+                addChatMessage(myUserId, text, true);
+                globalBroadcast.postMessage({ user: myUserId, text: text });
                 input.value = '';
             }
         }
+
+        // Listen to global network messages
+        globalBroadcast.onmessage = (event) => {
+            if (event.data && event.data.user && event.data.text) {
+                addChatMessage(event.data.user, event.data.text, true);
+            }
+        };
+
+        // Simulated NPC chatter
+        const chatUsers = ['KaiCenatFan', 'OhioGyatt', 'SigmaGrind', 'Skibidi123', 'MewingKing', 'FanumTaxer'];
+        const chatTexts = ['W RIZZ', 'FELL OFF', 'WHAT THE SIGMA', 'ONLY IN OHIO 💀💀', 'LET HIM COOK', 'NEGATIVE AURA', 'BRO IS COOKED'];
+
+        setInterval(() => {
+            if (Math.random() > 0.4) {
+                const u = chatUsers[Math.floor(Math.random() * chatUsers.length)];
+                const t = chatTexts[Math.floor(Math.random() * chatTexts.length)];
+                addChatMessage(u, t, false);
+            }
+        }, 2000);
+
+        // Initial setup
+        renderShop();
     </script>
 </body>
 </html>
