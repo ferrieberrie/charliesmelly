@@ -1,91 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smelly Charlie Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Klipl</title>
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --primary-font: 'Arial Black', Impact, sans-serif;
+            --lime: #32cd32;
+            --red: #ff0000;
+        }
 
-<style>
-* {
-  box-sizing: border-box;
-}
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: var(--primary-font);
+            user-select: none; /* Prevent text highlighting during chaotic clicking */
+            touch-action: none; /* Prevent zooming on double tap on mobile */
+        }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: black;
-  color: white;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-  text-align: center;
-}
+        #game-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: crosshair;
+        }
 
-h1 {
-  font-size: 60px;
-  margin-top: 40px;
-}
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-#score {
-  font-size: 30px;
-}
+        .score-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border: 4px solid var(--lime);
+            border-radius: 15px;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--lime);
+            text-shadow: 2px 2px 0 #000;
+            transition: all 0.2s;
+        }
 
-#charlie {
-  position: absolute;
-  padding: 20px 30px;
-  background: white;
-  color: black;
-  border-radius: 15px;
-  font-size: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-}
+        .klipl {
+            position: absolute;
+            font-size: 4rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: top 0.1s ease-out, left 0.1s ease-out;
+            white-space: nowrap;
+            z-index: 50;
+            padding: 20px; /* Bigger hit box */
+            margin: -20px;
+        }
 
-#message {
-  font-size: 25px;
-  margin-top: 20px;
-}
-</style>
+        .real-klipl {
+            color: var(--lime);
+            text-shadow: 0 0 15px var(--lime), 2px 2px 0px #000;
+        }
+
+        .fake-klipl {
+            color: var(--red);
+            text-shadow: 0 0 15px var(--red), 2px 2px 0px #000;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 3rem;
+            pointer-events: none;
+            animation: floatUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            z-index: 100;
+        }
+
+        .brainrot-text {
+            position: absolute;
+            font-size: 4vw;
+            color: hotpink;
+            pointer-events: none;
+            font-weight: 900;
+            animation: popZoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            z-index: 101;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px #fff, -3px -3px 0px cyan, 0 0 20px hotpink;
+        }
+
+        .minus-aura-text {
+            color: var(--red);
+            text-shadow: 2px 2px 0px #fff, 0 0 10px #000;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.5); }
+            50% { transform: translateY(-50px) scale(1.5); }
+            100% { opacity: 0; transform: translateY(-150px) scale(2); }
+        }
+
+        @keyframes popZoom {
+            0% { opacity: 0; transform: scale(0.1) rotate(-20deg); }
+            40% { opacity: 1; transform: scale(1.5) rotate(15deg); }
+            100% { opacity: 0; transform: scale(2.5) rotate(0deg); }
+        }
+
+        .spin { animation: spin 0.4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .wobble { animation: wobble 0.3s infinite alternate; }
+        @keyframes wobble { 0% { transform: scale(0.8) skewX(-10deg); } 100% { transform: scale(1.2) skewX(10deg); } }
+
+        .shake { animation: shake 0.05s infinite; }
+        @keyframes shake {
+            0% { transform: translate(5px, 5px) rotate(0deg); }
+            20% { transform: translate(-5px, -5px) rotate(-2deg); }
+            40% { transform: translate(-5px, 5px) rotate(2deg); }
+            60% { transform: translate(5px, -5px) rotate(0deg); }
+            80% { transform: translate(-5px, 0px) rotate(2deg); }
+            100% { transform: translate(0px, 5px) rotate(-2deg); }
+        }
+
+        .flash { animation: flashBg 0.1s infinite; }
+        @keyframes flashBg {
+            0% { background-color: #ff0000; }
+            20% { background-color: #00ff00; }
+            40% { background-color: #0000ff; }
+            60% { background-color: #ff00ff; }
+            80% { background-color: #ffff00; }
+            100% { background-color: #00ffff; }
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            text-align: center;
+        }
+
+        #start-screen h1 {
+            font-size: 5rem;
+            color: var(--lime);
+            text-shadow: 0 0 20px var(--lime);
+            margin: 0 0 20px 0;
+            animation: wobble 0.5s infinite alternate;
+        }
+
+        #start-screen p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            color: #ddd;
+        }
+
+        .btn {
+            font-family: var(--primary-font);
+            font-size: 3rem;
+            padding: 20px 40px;
+            background: var(--lime);
+            color: #000;
+            border: 6px solid #fff;
+            cursor: pointer;
+            font-weight: 900;
+            border-radius: 20px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 0 #fff, 0 0 30px var(--lime);
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: translateY(10px);
+            box-shadow: 0 0px 0 #fff, 0 0 30px var(--lime);
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>SMELLY CHARLIE</h1>
-<div id="score">Score: 0</div>
-<div id="message">Catch Charlie!</div>
+    <div id="game-container">
+        <div id="ui">
+            <div class="score-box" id="aura-score-box">AURA: <span id="aura">0</span> 🗿</div>
+        </div>
+    </div>
 
-<div id="charlie">💩 Charlie</div>
+    <div id="start-screen">
+        <h1>CATCH THE KLIPL</h1>
+        <p>
+            <strong>RULES:</strong><br>
+            Click the <span style="color: limegreen;">LIME GREEN Klipl</span> to gain AURA.<br>
+            Clicking the <span style="color: red;">RED Klipl</span> destroys your AURA.<br>
+            Missing clicks drains AURA.<br>
+            <em>WARNING: Contains flashing lights, loud noises, and terminal brainrot.</em>
+        </p>
+        <button class="btn" onclick="startGame()">LET HIM COOK</button>
+    </div>
 
-<script>
-const charlie = document.getElementById("charlie");
-const scoreText = document.getElementById("score");
-const message = document.getElementById("message");
+    <script>
+        const phrases = [
+            'Skibidi', 'Rizz', 'Gyatt', 'What the sigma', 
+            'L + ratio', 'Caught in 4k', 'Fanum tax', 
+            'No cap', 'Sus', 'Bro is cooked', 'Only in Ohio',
+            'Let him cook', 'W rizz', 'Beta', 'Alpha'
+        ];
+        const negativePhrases = [
+            'Bro fell off', 'Negative aura', 'Cringe', 'L', 'Skill issue'
+        ];
+        const emojis = ['💀', '😭', '🗿', '🔥', '💯', '🥶', '🧢', '🤡', '👽', '🧠'];
+        
+        let aura = 0;
+        let gameActive = false;
+        let targets = [];
+        let speed = 800; // Starting movement interval
+        let moveInterval;
+        let diffScale = 1;
 
-let score = 0;
+        const container = document.getElementById('game-container');
+        const auraDisplay = document.getElementById('aura');
+        const auraBox = document.getElementById('aura-score-box');
+        const startScreen = document.getElementById('start-screen');
+        const body = document.body;
 
-function moveCharlie() {
-  let x = Math.random() * (window.innerWidth - 180);
-  let y = Math.random() * (window.innerHeight - 100);
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel current speech to make it more chaotic/interrupting
+                window.speechSynthesis.cancel(); 
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.pitch = 0.5 + Math.random() * 1.5; // Random pitch 0.5 to 2
+                utterance.rate = 1.2 + Math.random(); // Fast rate 1.2 to 2.2
+                utterance.volume = 1;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
 
-  charlie.style.left = x + "px";
-  charlie.style.top = y + "px";
-}
+        container.addEventListener('mousedown', (e) => {
+            if(!gameActive) return;
+            // If they clicked the container itself (missed targets)
+            if(e.target === container) {
+                updateAura(-5);
+                spawnParticle(e.clientX, e.clientY, '-5 AURA', 'brainrot-text minus-aura-text');
+                if(Math.random() > 0.7) speak("Missed");
+                shortShake();
+            }
+        });
 
-charlie.onclick = function() {
-  score++;
-  scoreText.textContent = "Score: " + score;
+        // Touch support
+        container.addEventListener('touchstart', (e) => {
+            if(!gameActive) return;
+            if(e.target === container) {
+                updateAura(-5);
+                spawnParticle(e.touches[0].clientX, e.touches[0].clientY, '-5 AURA', 'brainrot-text minus-aura-text');
+                shortShake();
+            }
+        });
 
-  if (score >= 10) {
-    message.textContent = "You caught Smelly Charlie! 🏆";
-  } else {
-    message.textContent = "Get him!";
-  }
+        function createKlipl(isReal) {
+            const el = document.createElement('div');
+            el.className = `klipl ${isReal ? 'real-klipl' : 'fake-klipl'}`;
+            el.innerText = 'Klipl';
+            
+            // Initial positioning
+            moveEl(el);
 
-  moveCharlie();
-};
+            const hitLogic = (x, y) => {
+                if(isReal) {
+                    updateAura(10 * diffScale);
+                    hitEffects(x, y);
+                    moveEl(el);
+                    
+                    // Ramp up difficulty
+                    speed = Math.max(150, speed - 15);
+                    diffScale = Math.floor(aura / 50) + 1;
+                    resetInterval();
 
-moveCharlie();
-</script>
+                    // Occasionally spawn more real or fake ones at high scores
+                    if (aura > 0 && aura % 100 === 0 && targets.length < 20) {
+                        createKlipl(true);
+                        createKlipl(false);
+                        createKlipl(false); // extra fakes
+                    }
+                } else {
+                    updateAura(-50);
+                    const phrase = negativePhrases[Math.floor(Math.random() * negativePhrases.length)];
+                    speak(phrase);
+                    spawnParticle(x, y, phrase, 'brainrot-text minus-aura-text');
+                    severeShake();
+                    moveEl(el);
+                }
+            };
 
+            // Mouse event
+            el.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                hitLogic(e.clientX, e.clientY);
+            });
+
+            // Touch event
+            el.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                e.preventDefault(); // prevent mouse emulation
+                hitLogic(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            container.appendChild(el);
+            targets.push(el);
+            return el;
+        }
+
+        function moveEl(el) {
+            // Subtract size to keep in bounds
+            const maxX = window.innerWidth - 150; 
+            const maxY = window.innerHeight - 100;
+            
+            el.style.left = Math.max(10, Math.random() * maxX) + 'px';
+            el.style.top = Math.max(10, Math.random() * maxY) + 'px';
+
+            // Random chaos animations
+            el.classList.remove('spin', 'wobble');
+            const rand = Math.random();
+            if(rand > 0.66) el.classList.add('spin');
+            else if(rand > 0.33) el.classList.add('wobble');
+        }
+
+        function hitEffects(x, y) {
+            severeShake();
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            speak(phrase);
+            
+            // Main text pop
+            spawnParticle(x, y, phrase, 'brainrot-text');
+            
+            // Emoji explosion
+            const numEmojis = 3 + Math.floor(Math.random() * 4);
+            for(let i = 0; i < numEmojis; i++) {
+                setTimeout(() => {
+                    const ex = x + (Math.random() * 200 - 100);
+                    const ey = y + (Math.random() * 200 - 100);
+                    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                    spawnParticle(ex, ey, emoji, 'particle');
+                }, i * 40);
+            }
+        }
+
+        function spawnParticle(x, y, text, className) {
+            const p = document.createElement('div');
+            p.className = className;
+            p.innerText = text;
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            
+            // Random colors for brainrot text
+            if(className.includes('brainrot-text') && !className.includes('minus-aura')) {
+                const colors = ['hotpink', 'cyan', 'yellow', 'lime', 'orange'];
+                p.style.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            container.appendChild(p);
+            // Cleanup DOM
+            setTimeout(() => { if(p.parentNode) p.remove(); }, 1000);
+        }
+
+        function shortShake() {
+            body.classList.add('shake');
+            setTimeout(() => body.classList.remove('shake'), 50);
+        }
+
+        function severeShake() {
+            body.classList.add('shake');
+            setTimeout(() => body.classList.remove('shake'), 200);
+        }
+
+        function updateAura(amount) {
+            aura += amount;
+            // Floor aura at 0 or allow negatives? Let's allow negative for max embarrassment
+            auraDisplay.innerText = aura;
+            
+            // Pulse UI
+            auraBox.style.transform = 'scale(1.2)';
+            setTimeout(() => auraBox.style.transform = 'scale(1)', 100);
+
+            // The Flashing Background feature (activate if Aura > 50)
+            if(aura > 50) {
+                body.classList.add('flash');
+            } else {
+                body.classList.remove('flash');
+            }
+        }
+
+        function resetInterval() {
+            clearInterval(moveInterval);
+            moveInterval = setInterval(() => {
+                targets.forEach(t => moveEl(t));
+            }, speed);
+        }
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            
+            // Initialize TTS with a dummy utterance to bypass browser autoplay restrictions
+            if ('speechSynthesis' in window) {
+                const initUtterance = new SpeechSynthesisUtterance('');
+                initUtterance.volume = 0;
+                window.speechSynthesis.speak(initUtterance);
+            }
+
+            gameActive = true;
+            aura = 0;
+            speed = 800; // Reset to somewhat slow
+            diffScale = 1;
+            updateAura(0);
+            
+            // Cleanup old elements if restarting
+            targets.forEach(t => t.remove());
+            targets = [];
+            document.querySelectorAll('.particle, .brainrot-text').forEach(e => e.remove());
+            
+            // Spawn initial
+            createKlipl(true);
+            createKlipl(false);
+
+            resetInterval();
+            speak("Chat, is this real?");
+        }
+    </script>
 </body>
 </html>
