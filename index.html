@@ -856,18 +856,6 @@
             }
         };
 
-        // Simulated NPC chatter
-        const chatUsers = ['KaiCenatFan', 'OhioGyatt', 'SigmaGrind', 'Skibidi123', 'MewingKing', 'FanumTaxer'];
-        const chatTexts = ['W RIZZ', 'FELL OFF', 'WHAT THE SIGMA', 'ONLY IN OHIO 💀💀', 'LET HIM COOK', 'NEGATIVE AURA', 'BRO IS COOKED'];
-
-        setInterval(() => {
-            if (Math.random() > 0.4) {
-                const u = chatUsers[Math.floor(Math.random() * chatUsers.length)];
-                const t = chatTexts[Math.floor(Math.random() * chatTexts.length)];
-                addChatMessage(u, t, false);
-            }
-        }, 2000);
-
         // Initial setup
         renderShop();
     </script>
