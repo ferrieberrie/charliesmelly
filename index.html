@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catch the Klipl: 20,000x Brainrot Edition</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,7 +31,6 @@
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -40,13 +38,11 @@
             --red: #ff0000;
         }
 
-        /* Custom scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
-        
-        /* Grid background pattern */
+
         .bg-cyber-grid {
             background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
@@ -56,10 +52,8 @@
         .neon-text-lime { text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; }
         .neon-text-pink { text-shadow: 0 0 10px #FF007F, 0 0 20px #FF007F; }
 
-        /* Prevent text selection overlay */
         * { -webkit-user-select: none; user-select: none; }
 
-        /* Brainrot Animations & Game Elements */
         .klipl {
             position: absolute;
             font-size: 3rem;
@@ -106,6 +100,11 @@
 
         .minus-aura-text {
             color: var(--red) !important;
+            text-shadow: 2px 2px 0px #fff, 0 0 10px #000;
+        }
+
+        .plus-aura-text {
+            color: var(--lime) !important;
             text-shadow: 2px 2px 0px #fff, 0 0 10px #000;
         }
 
@@ -196,15 +195,36 @@
             text-align: center;
             text-transform: uppercase;
         }
+
+        .soundboard-btn {
+            transition: transform 0.1s;
+        }
+        .soundboard-btn:active {
+            transform: scale(0.9);
+        }
+
+        #name-modal {
+            backdrop-filter: blur(6px);
+        }
     </style>
 </head>
 <body id="body-main" class="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden bg-cyber-grid">
 
+    <!-- NAME SETTER MODAL -->
+    <div id="name-modal" class="fixed inset-0 bg-slate-950/95 z-[999] flex flex-col items-center justify-center p-6 text-center">
+        <div class="text-5xl mb-4">🗿</div>
+        <h1 class="text-3xl font-black text-lime-400 mb-2 uppercase">Enter The Ohio</h1>
+        <p class="text-sm text-slate-400 mb-6">Pick your rizz name for global chat</p>
+        <input id="name-input" type="text" maxlength="16" placeholder="e.g. SigmaGrindr69" class="bg-slate-900 border-2 border-lime-500 rounded-xl px-4 py-3 text-center text-lg font-bold text-lime-300 focus:outline-none focus:border-cyan-400 w-72 mb-4" onkeydown="if(event.key==='Enter') confirmName()">
+        <button onclick="confirmName()" class="px-8 py-3 bg-lime-400 text-slate-950 border-4 border-white font-black text-xl rounded-2xl uppercase tracking-wider shadow-[0_6px_0_#fff] active:translate-y-1.5 active:shadow-[0_0px_0_#fff] transition-all">
+            Let's Cook
+        </button>
+    </div>
+
     <!-- TOP HEADER / STATUS BAR -->
-    <header class="h-20 bg-slate-900/90 border-b border-slate-800 px-4 flex items-center justify-between z-30 backdrop-blur-md shrink-0">
-        <!-- Logo & Rank -->
+    <header class="h-20 bg-gradient-to-r from-slate-900/95 via-slate-900/90 to-slate-900/95 border-b border-slate-800/80 px-5 flex items-center justify-between z-30 backdrop-blur-md shrink-0 shadow-lg shadow-black/20">
         <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 bg-gradient-to-tr from-lime-500 via-emerald-400 to-cyan-500 rounded-xl flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg shadow-lime-500/20 animate-pulse-fast">
+            <div class="w-12 h-12 bg-gradient-to-tr from-lime-500 via-emerald-400 to-cyan-500 rounded-xl flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg shadow-lime-500/30 animate-pulse-fast">
                 ⚡
             </div>
             <div>
@@ -212,9 +232,9 @@
                     Catch the Klipl
                 </h1>
                 <div class="flex items-center space-x-2 text-xs">
-                    <span class="text-slate-400">RANK:</span>
+                    <span class="text-slate-500">RANK:</span>
                     <span id="rank-title" class="font-bold text-neonLime">Level 1 NPC</span>
-                    <span class="text-slate-600">|</span>
+                    <span class="text-slate-700">|</span>
                     <div class="w-24 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
                         <div id="rank-bar" class="bg-gradient-to-r from-lime-400 to-cyan-400 h-full w-0 transition-all duration-300"></div>
                     </div>
@@ -222,31 +242,32 @@
             </div>
         </div>
 
-        <!-- Live Score & Passive Aura Counter -->
-        <div class="flex items-center space-x-8">
-            <div class="text-center">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Total Aura</div>
-                <div id="aura" class="text-3xl font-black text-neonLime tracking-wide font-mono neon-text-lime">
+        <div class="flex items-center space-x-3">
+            <div class="text-center bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-1.5">
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Total Aura</div>
+                <div id="aura" class="text-2xl font-black text-neonLime tracking-wide font-mono neon-text-lime leading-tight">
                     0
                 </div>
             </div>
-            <div class="text-center hidden sm:block">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">AFK Yield</div>
-                <div id="afk-rate-display" class="text-xl font-bold text-yellow-400 font-mono">
+            <div class="text-center hidden sm:block bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-1.5">
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">AFK Yield</div>
+                <div id="afk-rate-display" class="text-lg font-bold text-yellow-400 font-mono leading-tight">
                     +0/s
                 </div>
             </div>
-            <div class="text-center hidden md:block">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Diff Scale</div>
-                <div id="diff-display" class="text-xl font-bold text-cyan-400 font-mono">
+            <div class="text-center hidden md:block bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-1.5">
+                <div class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Diff Scale</div>
+                <div id="diff-display" class="text-lg font-bold text-cyan-400 font-mono leading-tight">
                     1.0x
                 </div>
             </div>
         </div>
 
-        <!-- Controls / Audio Settings -->
         <div class="flex items-center space-x-3">
-            <button id="btn-mute" onclick="toggleMute()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition active:scale-95" title="Toggle Mute">
+            <button id="btn-mute-music" onclick="toggleMusic()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition active:scale-95" title="Toggle Music">
+                <i id="music-icon" class="fa-solid fa-music text-lg text-pink-400"></i>
+            </button>
+            <button id="btn-mute" onclick="toggleMute()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition active:scale-95" title="Toggle Voice">
                 <i id="mute-icon" class="fa-solid fa-volume-high text-lg text-lime-400"></i>
             </button>
             <div class="hidden lg:flex flex-col text-right">
@@ -263,45 +284,37 @@
         <section class="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
             <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm shadow-xl">
                 <!-- Header -->
-                <div class="p-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                <div class="px-4 py-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <span class="relative flex h-3 w-3">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                         </span>
-                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-200">GLOBAL MULTI-USER CHAT</h2>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-slate-200">Global Chat</h2>
                     </div>
                     <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
                         ONLINE
                     </span>
                 </div>
 
-                <!-- 2D Subway Surfers Mini-Game Canvas -->
-                <div class="p-2 bg-slate-950 flex flex-col items-center border-b border-slate-800">
-                    <div class="w-full flex justify-between items-center mb-1 text-[11px] text-slate-400 font-mono">
-                        <span class="text-yellow-400 font-bold">🏃 SUBWAY RUNNER</span>
-                        <span id="subway-score">SCORE: 0</span>
-                    </div>
-                    <div class="relative w-full h-36 rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
-                        <canvas id="subway-canvas" class="w-full h-full block"></canvas>
-                        <div class="absolute bottom-1 left-1 right-1 flex justify-between text-[9px] bg-slate-950/80 backdrop-blur px-2 py-0.5 rounded text-slate-300 font-mono">
-                            <span>A/D (Switch) | W (Jump)</span>
-                        </div>
-                    </div>
+                <!-- Soundboard -->
+                <div class="p-3 border-b border-slate-800 bg-slate-950/40">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">🔊 Brainrot Soundboard</div>
+                    <div id="soundboard" class="grid grid-cols-2 gap-1.5"></div>
                 </div>
 
-                <!-- Real Live Global Multi-User Chat Feed -->
-                <div class="flex-1 flex flex-col overflow-hidden bg-slate-950/50 p-2">
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
-                        <span>💬 Live Global Chat</span>
-                        <span class="text-cyan-400">BROADCAST NETWORK</span>
+                <!-- Real Live Global Chat Feed -->
+                <div class="flex-1 flex flex-col overflow-hidden bg-slate-950/40 p-3">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center justify-between">
+                        <span>💬 Live Chat</span>
+                        <span class="text-cyan-500">BROADCAST</span>
                     </div>
-                    <div id="stream-chat" class="flex-1 overflow-y-auto space-y-2 pr-1 font-sans text-xs">
+                    <div id="stream-chat" class="flex-1 overflow-y-auto space-y-1.5 pr-1 font-sans text-xs">
                         <!-- Dynamic chat messages injected here -->
                     </div>
                     <div class="mt-2 pt-2 border-t border-slate-800/80 flex gap-2">
-                        <input id="chat-input" type="text" placeholder="Send global chat..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-400" onkeydown="if(event.key==='Enter') sendUserChatMessage()">
-                        <button onclick="sendUserChatMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
+                        <input id="chat-input" type="text" placeholder="Send global chat..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400 transition" onkeydown="if(event.key==='Enter') sendUserChatMessage()">
+                        <button onclick="sendUserChatMessage()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                             Send
                         </button>
                     </div>
@@ -338,21 +351,32 @@
             </div>
         </section>
 
-        <!-- ================= RIGHT COLUMN: AFK AURA FARMER SHOP (3 cols) ================= -->
+        <!-- ================= RIGHT COLUMN: SHOP + LEADERBOARD (3 cols) ================= -->
         <section class="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
+
+            <!-- LEADERBOARD -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl p-3" style="max-height: 42%;">
+                <div class="px-3 py-2 bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/20 rounded-xl mb-2 flex items-center gap-2">
+                    <span class="text-xl">🏆</span>
+                    <h2 class="text-xs font-bold tracking-wider uppercase text-yellow-400">Live Leaderboard</h2>
+                </div>
+                <div id="leaderboard-list" class="overflow-y-auto space-y-1.5 pr-1" style="max-height: 170px;"></div>
+            </div>
+
+            <!-- SHOP -->
             <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm shadow-xl p-3">
-                <div class="p-2 bg-slate-950/80 border border-slate-800 rounded-xl mb-3 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
+                <div class="px-3 py-2 bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/20 rounded-xl mb-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
                         <span class="text-xl">🏪</span>
-                        <h2 class="text-xs font-bold tracking-wider uppercase text-yellow-400">AFK AURA FARMER SHOP</h2>
+                        <h2 class="text-xs font-bold tracking-wider uppercase text-yellow-400">AFK Farmer Shop</h2>
                     </div>
                     <span class="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
-                        PASSIVE YIELD
+                        PASSIVE
                     </span>
                 </div>
 
                 <!-- Scrollable Upgrades Container -->
-                <div id="shop-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                <div id="shop-items" class="flex-1 overflow-y-auto space-y-2 pr-1">
                     <!-- Upgrades dynamically generated in JavaScript -->
                 </div>
             </div>
@@ -387,18 +411,36 @@
         let afkAuraRate = 0;
         let gameActive = false;
         let targets = [];
-        let speed = 800; 
+        let speed = 1400; 
         let moveInterval;
         let bgInterval;
         let popupInterval;
         let afkFarmerInterval;
         let diffScale = 1;
         let isMuted = false;
+        let musicMuted = false;
+        let myName = null;
 
         const container = document.getElementById('game-container');
         const auraDisplay = document.getElementById('aura');
         const startScreen = document.getElementById('start-screen');
         const bodyMain = document.getElementById('body-main');
+
+        /* ---------------- NAME SETTER ---------------- */
+        const nameModal = document.getElementById('name-modal');
+        const nameInput = document.getElementById('name-input');
+        const randomDefaultNames = ['Rizzler', 'SigmaGrind', 'OhioKing', 'GyattEnjoyer', 'SkibidiFan', 'FanumTaxer'];
+        nameInput.value = randomDefaultNames[Math.floor(Math.random() * randomDefaultNames.length)] + Math.floor(Math.random()*99);
+
+        function confirmName() {
+            const val = nameInput.value.trim();
+            myName = val !== '' ? val.slice(0, 16) : ('Rizzler_' + Math.floor(1000 + Math.random() * 9000));
+            nameModal.style.display = 'none';
+            addChatMessage('SYSTEM', `${myName} has entered the Ohio. 🗿`, false, true);
+            globalBroadcast.postMessage({ type: 'join', user: myName });
+            updateLeaderboard();
+            broadcastScore();
+        }
 
         /* ---------------- AFK AURA FARMERS SHOP DATA ---------------- */
         const shopUpgrades = [
@@ -441,7 +483,7 @@
                 item.cost = Math.floor(item.cost * 1.3);
                 recalculateAFKRate();
                 updateAura(0);
-                speak("Purchased");
+                playSfx('pop');
             }
         }
 
@@ -460,6 +502,18 @@
             }
         }
 
+        function toggleMusic() {
+            musicMuted = !musicMuted;
+            const icon = document.getElementById('music-icon');
+            if(musicMuted) {
+                icon.className = "fa-solid fa-music-slash text-lg text-red-500";
+                stopMusic();
+            } else {
+                icon.className = "fa-solid fa-music text-lg text-pink-400";
+                if (gameActive) startMusic();
+            }
+        }
+
         function speak(text) {
             if (isMuted) return;
             if ('speechSynthesis' in window) {
@@ -472,11 +526,335 @@
             }
         }
 
+        /* ---------------- WEB AUDIO: BRAINROT MUSIC + WEIRD SFX ---------------- */
+        let audioCtx = null;
+        let musicNodes = [];
+        let musicStep = 0;
+        let musicTimer = null;
+
+        function getCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        // Chaotic looping brainrot beat: honking duck-kazoo melody over a bouncy sub bass, with random "quack" fills
+        function startMusic() {
+            if (musicMuted) return;
+            const ctx = getCtx();
+            if (musicTimer) return;
+
+            // silly bouncing melody, deliberately goofy and slightly out of tune for comedy
+            const melody = [523, 523, 659, 523, 784, 659, 523, 466, 523, 523, 659, 523, 880, 784, 659, 587];
+            const bassPattern = [65.4, 65.4, 98, 65.4, 130.8, 98, 65.4, 87.3];
+
+            musicTimer = setInterval(() => {
+                if (musicMuted) return;
+                const t = ctx.currentTime;
+                const step = musicStep % melody.length;
+                const bStep = musicStep % bassPattern.length;
+
+                // bouncy sub bass (cartoon "boing-boing" walk)
+                const bass = ctx.createOscillator();
+                const bassGain = ctx.createGain();
+                bass.type = 'triangle';
+                bass.frequency.setValueAtTime(bassPattern[bStep] * 1.5, t);
+                bass.frequency.exponentialRampToValueAtTime(bassPattern[bStep], t + 0.1);
+                bassGain.gain.setValueAtTime(0.001, t);
+                bassGain.gain.linearRampToValueAtTime(0.16, t + 0.015);
+                bassGain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+                bass.connect(bassGain).connect(ctx.destination);
+                bass.start(t); bass.stop(t + 0.2);
+
+                // duck-kazoo melody lead: nasal square wave + fast wobble = comedic "duck honk"
+                const lead = ctx.createOscillator();
+                const leadGain = ctx.createGain();
+                const vibrato = ctx.createOscillator();
+                const vibratoGain = ctx.createGain();
+                lead.type = 'square';
+                lead.frequency.setValueAtTime(melody[step], t);
+                vibrato.type = 'sine';
+                vibrato.frequency.setValueAtTime(28, t);
+                vibratoGain.gain.setValueAtTime(20, t);
+                vibrato.connect(vibratoGain).connect(lead.frequency);
+                leadGain.gain.setValueAtTime(0.001, t);
+                leadGain.gain.linearRampToValueAtTime(0.055, t + 0.01);
+                leadGain.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
+                lead.connect(leadGain).connect(ctx.destination);
+                vibrato.start(t); vibrato.stop(t + 0.13);
+                lead.start(t); lead.stop(t + 0.13);
+
+                // goofy honk accent every 4 steps
+                if (step % 4 === 0) {
+                    const honk = ctx.createOscillator();
+                    const honk2 = ctx.createOscillator();
+                    const honkGain = ctx.createGain();
+                    honk.type = 'square'; honk2.type = 'square';
+                    honk.frequency.setValueAtTime(720, t);
+                    honk2.frequency.setValueAtTime(480, t);
+                    honkGain.gain.setValueAtTime(0.08, t);
+                    honkGain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+                    honk.connect(honkGain).connect(ctx.destination);
+                    honk2.connect(honkGain);
+                    honk.start(t); honk.stop(t + 0.09);
+                    honk2.start(t); honk2.stop(t + 0.09);
+                }
+
+                // random comedic "quack" fill for extra brainrot flavor
+                if (Math.random() > 0.85) {
+                    const quack = ctx.createOscillator();
+                    const quackGain = ctx.createGain();
+                    quack.type = 'sawtooth';
+                    quack.frequency.setValueAtTime(320, t);
+                    quack.frequency.linearRampToValueAtTime(160, t + 0.08);
+                    quackGain.gain.setValueAtTime(0.12, t);
+                    quackGain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+                    quack.connect(quackGain).connect(ctx.destination);
+                    quack.start(t); quack.stop(t + 0.09);
+                }
+
+                musicStep++;
+            }, 170);
+        }
+
+        function stopMusic() {
+            if (musicTimer) {
+                clearInterval(musicTimer);
+                musicTimer = null;
+            }
+        }
+
+        // Weird ambient sounds fired randomly during gameplay (not soundboard)
+        function playRandomWeirdSound() {
+            if (isMuted || !gameActive) return;
+            const ctx = getCtx();
+            const t = ctx.currentTime;
+            const type = Math.floor(Math.random() * 4);
+
+            if (type === 0) {
+                // slide whistle up
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, t);
+                osc.frequency.exponentialRampToValueAtTime(1800, t + 0.4);
+                gain.gain.setValueAtTime(0.1, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.4);
+            } else if (type === 1) {
+                // duck quack
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, t);
+                osc.frequency.linearRampToValueAtTime(150, t + 0.08);
+                gain.gain.setValueAtTime(0.15, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.1);
+            } else if (type === 2) {
+                // boing
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, t);
+                osc.frequency.exponentialRampToValueAtTime(80, t + 0.3);
+                gain.gain.setValueAtTime(0.12, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.3);
+            } else {
+                // laser bloop
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1200, t);
+                osc.frequency.exponentialRampToValueAtTime(100, t + 0.15);
+                gain.gain.setValueAtTime(0.08, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.15);
+            }
+        }
+        let weirdSoundInterval = null;
+
+        // Soundboard sfx (clicked deliberately by user) - punchy layered synthesized sounds
+        function makeOsc(type, freq, startGain, t, dur) {
+            const ctx = getCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, t);
+            gain.gain.setValueAtTime(startGain, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(t);
+            osc.stop(t + dur);
+            return { osc, gain };
+        }
+
+        const soundboardSfx = {
+            // AIRHORN — classic triple blast, layered detuned saws
+            airhorn: () => {
+                const ctx = getCtx();
+                for (let i = 0; i < 3; i++) {
+                    const t = ctx.currentTime + i * 0.28;
+                    [365, 368, 550].forEach(f => {
+                        const { gain } = makeOsc('sawtooth', f, 0.13, t, 0.26);
+                        gain.gain.setValueAtTime(0.13, t);
+                        gain.gain.setValueAtTime(0.13, t + 0.2);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.26);
+                    });
+                }
+            },
+            // BRUH — low descending honk
+            bruh: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(160, t);
+                osc.frequency.exponentialRampToValueAtTime(70, t + 0.4);
+                gain.gain.setValueAtTime(0.25, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.4);
+            },
+            // VINE BOOM — deep punchy sub drop
+            vine: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180, t);
+                osc.frequency.exponentialRampToValueAtTime(30, t + 0.35);
+                gain.gain.setValueAtTime(0.001, t);
+                gain.gain.linearRampToValueAtTime(0.4, t + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.5);
+            },
+            // EMOTIONAL DAMAGE — sad descending piano-ish notes
+            emotional: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const notes = [523, 494, 440, 392, 349];
+                notes.forEach((f, i) => {
+                    const nt = t + i * 0.18;
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, nt);
+                    gain.gain.setValueAtTime(0.001, nt);
+                    gain.gain.linearRampToValueAtTime(0.18, nt + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, nt + 0.22);
+                    osc.connect(gain).connect(ctx.destination);
+                    osc.start(nt); osc.stop(nt + 0.22);
+                });
+            },
+            // OHIO SIREN — wobbling alarm sweep
+            ohio: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, t);
+                for (let i = 0; i < 4; i++) {
+                    osc.frequency.linearRampToValueAtTime(600, t + 0.15 + i*0.3);
+                    osc.frequency.linearRampToValueAtTime(200, t + 0.3 + i*0.3);
+                }
+                gain.gain.setValueAtTime(0.14, t);
+                gain.gain.setValueAtTime(0.14, t + 1.0);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 1.2);
+            },
+            // SKIBIDI TOILET — bubbly bouncing beeps
+            skibidi: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const seq = [300, 600, 300, 600, 450, 900];
+                seq.forEach((f, i) => {
+                    const nt = t + i * 0.1;
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(f, nt);
+                    gain.gain.setValueAtTime(0.11, nt);
+                    gain.gain.exponentialRampToValueAtTime(0.001, nt + 0.09);
+                    osc.connect(gain).connect(ctx.destination);
+                    osc.start(nt); osc.stop(nt + 0.09);
+                });
+            },
+            // RIZZ — smooth rising slide whistle
+            rizz: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, t);
+                osc.frequency.exponentialRampToValueAtTime(1100, t + 0.3);
+                gain.gain.setValueAtTime(0.001, t);
+                gain.gain.linearRampToValueAtTime(0.18, t + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.32);
+            },
+            // SUS — glitchy record scratch stutter
+            sus: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                for (let i = 0; i < 3; i++) {
+                    const nt = t + i * 0.1;
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(240, nt);
+                    osc.frequency.exponentialRampToValueAtTime(200, nt + 0.08);
+                    gain.gain.setValueAtTime(0.14, nt);
+                    gain.gain.exponentialRampToValueAtTime(0.001, nt + 0.08);
+                    osc.connect(gain).connect(ctx.destination);
+                    osc.start(nt); osc.stop(nt + 0.08);
+                }
+            },
+            // BOING — shop purchase confirm
+            boing: () => {
+                const ctx = getCtx(); const t = ctx.currentTime;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, t);
+                osc.frequency.exponentialRampToValueAtTime(80, t + 0.3);
+                gain.gain.setValueAtTime(0.12, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(t); osc.stop(t + 0.3);
+            },
+            pop: () => playSfx('boing')
+        };
+
+        // Soundboard always plays regardless of the voice-line mute toggle
+        function playSfx(name) {
+            if (soundboardSfx[name]) soundboardSfx[name]();
+        }
+
+        function renderSoundboard() {
+            const board = document.getElementById('soundboard');
+            const buttons = [
+                { id: 'airhorn', label: '📯 Airhorn' },
+                { id: 'bruh', label: '😑 Bruh' },
+                { id: 'vine', label: '💥 Vine Boom' },
+                { id: 'emotional', label: '😭 Emotional Damage' },
+                { id: 'ohio', label: '🌀 Ohio Siren' },
+                { id: 'skibidi', label: '🚽 Skibidi' },
+                { id: 'rizz', label: '😏 W Rizz' },
+                { id: 'sus', label: '🔴 Sus Scratch' }
+            ];
+            board.innerHTML = '';
+            buttons.forEach(b => {
+                const btn = document.createElement('button');
+                btn.className = 'soundboard-btn bg-gradient-to-br from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 border border-slate-700 hover:border-pink-500/50 rounded-lg py-2 text-[10px] font-bold text-slate-200 shadow-sm';
+                btn.innerText = b.label;
+                btn.onclick = () => playSfx(b.id);
+                board.appendChild(btn);
+            });
+        }
+
         container.addEventListener('mousedown', (e) => {
             if(!gameActive) return;
             if(e.target === container) {
-                updateAura(-5);
-                spawnParticle(e.clientX, e.clientY, '-5 AURA', 'brainrot-text minus-aura-text');
+                const missPenalty = 5 * diffScale;
+                updateAura(-missPenalty);
+                spawnParticle(e.clientX, e.clientY, `-${missPenalty} AURA`, 'brainrot-text minus-aura-text');
                 if(Math.random() > 0.7) speak("Missed");
                 shortShake();
             }
@@ -491,14 +869,16 @@
 
             const hitLogic = (x, y) => {
                 if(isReal) {
-                    updateAura(10 * diffScale);
-                    hitEffects(x, y);
+                    // FIX: clicking the real (lime) Klipl now correctly ADDS aura, scaling with difficulty
+                    const gain = 20 * diffScale;
+                    updateAura(gain);
+                    hitEffects(x, y, gain);
                     moveEl(el);
                     
-                    speed = Math.max(150, speed - 15);
-                    diffScale = Math.floor(aura / 50) + 1;
+                    // speed ramps up more gently and caps out at 300ms so it never becomes impossible
+                    speed = Math.max(300, speed - 25);
+                    diffScale = Math.max(1, Math.floor(aura / 250) + 1);
                     document.getElementById('diff-display').innerText = diffScale + 'x';
-                    document.getElementById('speed-display').innerText = speed + 'ms';
                     resetInterval();
 
                     if (aura > 0 && aura % 100 === 0 && targets.length < 15) {
@@ -541,12 +921,12 @@
             else if(rand > 0.33) el.classList.add('wobble');
         }
 
-        function hitEffects(x, y) {
+        function hitEffects(x, y, gain) {
             severeShake();
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
             speak(phrase);
             
-            spawnParticle(x, y, phrase, 'brainrot-text');
+            spawnParticle(x, y, `+${gain} AURA`, 'brainrot-text plus-aura-text');
             createExplosion(x, y, 'var(--lime)');
             
             const numEmojis = 3 + Math.floor(Math.random() * 4);
@@ -569,7 +949,7 @@
             p.style.left = (x - rect.left) + 'px';
             p.style.top = (y - rect.top) + 'px';
             
-            if(className.includes('brainrot-text') && !className.includes('minus-aura')) {
+            if(className.includes('brainrot-text') && !className.includes('minus-aura') && !className.includes('plus-aura')) {
                 const colors = ['hotpink', 'cyan', 'yellow', 'lime', 'orange'];
                 p.style.color = colors[Math.floor(Math.random() * colors.length)];
             }
@@ -623,18 +1003,8 @@
         }
 
         function spawnPopup() {
-            if (!gameActive || aura < 30) return;
-            const p = document.createElement('div');
-            p.className = 'chaotic-popup';
-            p.innerText = popupMessages[Math.floor(Math.random() * popupMessages.length)];
-            
-            const rect = container.getBoundingClientRect();
-            p.style.left = Math.random() * (rect.width - 250) + 'px';
-            p.style.top = Math.random() * (rect.height - 150) + 'px';
-            
-            container.appendChild(p);
-            if(Math.random() > 0.6) speak("Error");
-            setTimeout(() => { if (p.parentNode) p.remove(); }, 1200);
+            // disabled: chaotic popups removed
+            return;
         }
 
         function shortShake() {
@@ -668,13 +1038,8 @@
                 rankBar.style.width = "100%";
             }
 
-            if(aura > 50) {
-                bodyMain.classList.add('flash');
-            } else {
-                bodyMain.classList.remove('flash');
-            }
-
             renderShop();
+            broadcastScore();
         }
 
         function resetInterval() {
@@ -695,7 +1060,7 @@
 
             gameActive = true;
             aura = 0;
-            speed = 800;
+            speed = 1400;
             diffScale = 1;
             updateAura(0);
             
@@ -703,16 +1068,16 @@
             targets = [];
             
             clearInterval(bgInterval);
-            clearInterval(popupInterval);
             clearInterval(afkFarmerInterval);
+            clearInterval(weirdSoundInterval);
 
             bgInterval = setInterval(spawnBgMeme, 500); 
-            popupInterval = setInterval(spawnPopup, 2500); 
+            weirdSoundInterval = setInterval(playRandomWeirdSound, 3500);
             
-            // Passive AFK Aura Generation Timer
+            // Passive AFK Aura Generation Timer — scales with difficulty so farmed aura also grows
             afkFarmerInterval = setInterval(() => {
                 if (afkAuraRate > 0) {
-                    updateAura(afkAuraRate);
+                    updateAura(afkAuraRate * diffScale);
                 }
             }, 1000);
 
@@ -721,143 +1086,97 @@
 
             resetInterval();
             speak("Chat, is this real?");
+            if (!musicMuted) startMusic();
         }
 
-        /* ---------------- SUBWAY RUNNER MINI-GAME ---------------- */
-        const subwayCanvas = document.getElementById('subway-canvas');
-        const subwayCtx = subwayCanvas.getContext('2d');
-        let subwayScore = 0;
-        let subwayLane = 1; // 0: left, 1: center, 2: right
-        let isJumping = false;
-        let jumpTimer = 0;
-        let obstacles = [];
-
-        function resizeSubwayCanvas() {
-            if(!subwayCanvas.parentElement) return;
-            subwayCanvas.width = subwayCanvas.parentElement.clientWidth;
-            subwayCanvas.height = subwayCanvas.parentElement.clientHeight;
-        }
-        window.addEventListener('resize', resizeSubwayCanvas);
-        resizeSubwayCanvas();
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
-                if (subwayLane > 0) subwayLane--;
-            } else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
-                if (subwayLane < 2) subwayLane++;
-            } else if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
-                if (!isJumping) {
-                    isJumping = true;
-                    jumpTimer = 0;
-                }
-            }
-        });
-
-        function updateSubway() {
-            subwayCtx.fillStyle = '#0f172a';
-            subwayCtx.fillRect(0, 0, subwayCanvas.width, subwayCanvas.height);
-
-            const laneWidth = subwayCanvas.width / 3;
-
-            // Draw lanes
-            subwayCtx.strokeStyle = '#334155';
-            subwayCtx.setLineDash([10, 10]);
-            subwayCtx.beginPath();
-            subwayCtx.moveTo(laneWidth, 0); subwayCtx.lineTo(laneWidth, subwayCanvas.height);
-            subwayCtx.moveTo(laneWidth * 2, 0); subwayCtx.lineTo(laneWidth * 2, subwayCanvas.height);
-            subwayCtx.stroke();
-            subwayCtx.setLineDash([]);
-
-            // Spawn obstacles
-            if (Math.random() < 0.03) {
-                obstacles.push({
-                    lane: Math.floor(Math.random() * 3),
-                    y: -30,
-                    speed: 3 + Math.random() * 2
-                });
-            }
-
-            // Update jump
-            let playerOffset = 0;
-            if (isJumping) {
-                jumpTimer += 0.1;
-                playerOffset = Math.sin(jumpTimer * Math.PI) * 25;
-                if (jumpTimer >= 1) {
-                    isJumping = false;
-                }
-            }
-
-            // Draw player
-            const playerX = subwayLane * laneWidth + laneWidth / 2;
-            const playerY = subwayCanvas.height - 25 - playerOffset;
-            subwayCtx.fillStyle = '#39FF14';
-            subwayCtx.beginPath();
-            subwayCtx.arc(playerX, playerY, 8, 0, Math.PI * 2);
-            subwayCtx.fill();
-
-            // Obstacles
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                const obs = obstacles[i];
-                obs.y += obs.speed;
-
-                const obsX = obs.lane * laneWidth + laneWidth / 2;
-                subwayCtx.fillStyle = '#ef4444';
-                subwayCtx.fillRect(obsX - 10, obs.y - 10, 20, 20);
-
-                // Collision
-                if (obs.lane === subwayLane && Math.abs(obs.y - playerY) < 15 && playerOffset < 10) {
-                    subwayScore = Math.max(0, subwayScore - 50);
-                    obstacles.splice(i, 1);
-                    continue;
-                }
-
-                if (obs.y > subwayCanvas.height) {
-                    subwayScore += 10;
-                    obstacles.splice(i, 1);
-                }
-            }
-
-            document.getElementById('subway-score').innerText = `SCORE: ${subwayScore}`;
-            requestAnimationFrame(updateSubway);
-        }
-        requestAnimationFrame(updateSubway);
-
-        /* ---------------- GLOBAL MULTI-USER CHAT ENGINE ---------------- */
+        /* ---------------- GLOBAL MULTI-USER CHAT ENGINE (real messages only) ---------------- */
         const chatFeed = document.getElementById('stream-chat');
-        const myUserId = 'Rizzler_' + Math.floor(1000 + Math.random() * 9000);
-        
-        // BroadcastChannel syncs cross-tab/cross-window in real-time
         const globalBroadcast = new BroadcastChannel('brainrot_global_chat_channel');
 
-        function addChatMessage(user, text, isGlobal = false) {
+        function addChatMessage(user, text, isGlobal = false, isSystem = false) {
             const msg = document.createElement('div');
-            msg.className = `p-1.5 rounded border text-[11px] leading-tight ${isGlobal ? 'bg-cyan-950/60 border-cyan-800/80' : 'bg-slate-900/80 border-slate-800'}`;
-            msg.innerHTML = `<span class="font-bold ${user === myUserId ? 'text-lime-400' : 'text-cyan-400'}">${user}:</span> <span class="text-slate-200">${text}</span>`;
+            if (isSystem) {
+                msg.className = 'p-1.5 rounded border text-[11px] leading-tight bg-yellow-950/40 border-yellow-800/50 text-yellow-300 italic';
+                msg.innerText = text;
+            } else {
+                msg.className = `p-1.5 rounded border text-[11px] leading-tight ${isGlobal ? 'bg-cyan-950/60 border-cyan-800/80' : 'bg-slate-900/80 border-slate-800'}`;
+                msg.innerHTML = `<span class="font-bold ${user === myName ? 'text-lime-400' : 'text-cyan-400'}">${escapeHtml(user)}:</span> <span class="text-slate-200">${escapeHtml(text)}</span>`;
+            }
             chatFeed.appendChild(msg);
             chatFeed.scrollTop = chatFeed.scrollHeight;
-            if(chatFeed.children.length > 40) chatFeed.children[0].remove();
+            if(chatFeed.children.length > 60) chatFeed.children[0].remove();
         }
 
-        // Send local chat to Broadcast Channel
+        function escapeHtml(str) {
+            const d = document.createElement('div');
+            d.innerText = str;
+            return d.innerHTML;
+        }
+
+        // Send local chat to Broadcast Channel — only real user-typed messages appear
         function sendUserChatMessage() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
-            if(text !== '') {
-                addChatMessage(myUserId, text, true);
-                globalBroadcast.postMessage({ user: myUserId, text: text });
+            if(text !== '' && myName) {
+                addChatMessage(myName, text, true);
+                globalBroadcast.postMessage({ type: 'chat', user: myName, text: text });
                 input.value = '';
             }
         }
 
-        // Listen to global network messages
+        // Listen to global network messages (only real chat + join/leaderboard events)
         globalBroadcast.onmessage = (event) => {
-            if (event.data && event.data.user && event.data.text) {
-                addChatMessage(event.data.user, event.data.text, true);
+            const data = event.data;
+            if (!data) return;
+            if (data.type === 'chat' && data.user && data.text) {
+                addChatMessage(data.user, data.text, true);
+            } else if (data.type === 'join' && data.user) {
+                addChatMessage('SYSTEM', `${data.user} has entered the Ohio. 🗿`, false, true);
+                leaderboardData[data.user] = leaderboardData[data.user] || 0;
+                renderLeaderboard();
+            } else if (data.type === 'score' && data.user) {
+                leaderboardData[data.user] = data.score;
+                renderLeaderboard();
             }
         };
 
+        /* ---------------- LIVE LEADERBOARD ---------------- */
+        let leaderboardData = {}; // { name: score }
+
+        function broadcastScore() {
+            if (!myName) return;
+            leaderboardData[myName] = aura;
+            globalBroadcast.postMessage({ type: 'score', user: myName, score: aura });
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            const entries = Object.entries(leaderboardData).sort((a, b) => b[1] - a[1]).slice(0, 10);
+            list.innerHTML = '';
+            if (entries.length === 0) {
+                list.innerHTML = '<div class="text-[10px] text-slate-500 italic">No aura yet. Get cooking.</div>';
+                return;
+            }
+            const medals = ['🥇', '🥈', '🥉'];
+            entries.forEach(([name, score], i) => {
+                const row = document.createElement('div');
+                row.className = `flex items-center justify-between px-2 py-1 rounded-lg text-xs ${name === myName ? 'bg-lime-500/10 border border-lime-500/30' : 'bg-slate-950/60 border border-slate-800'}`;
+                row.innerHTML = `
+                    <span class="flex items-center gap-1.5 font-bold ${name === myName ? 'text-lime-400' : 'text-slate-200'}">
+                        <span class="text-slate-500 w-4">${medals[i] || (i+1)}</span> ${escapeHtml(name)}
+                    </span>
+                    <span class="font-mono font-bold text-yellow-400">${score}</span>
+                `;
+                list.appendChild(row);
+            });
+        }
+        function updateLeaderboard() { renderLeaderboard(); }
+
         // Initial setup
         renderShop();
+        renderSoundboard();
+        renderLeaderboard();
     </script>
 </body>
 </html>
